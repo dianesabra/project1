@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC:700|Bree+Serif|Concert+One|Major+Mono+Display"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      background-image: url("assets/images/background.jpg");
+      background-repeat: repeat-x;
+    }
+    .jumbotron {
+      font-family: "Major Mono Display", monospace;
+    }
+    .card {
+      font-family: "Concert One", cursive;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-6">Eventify</h1>
+          <p class="lead">Search for Events in Your Area!</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card col-sm-7" style="width: 18rem;">
+          <!-- DELETE EVENTUALLY -->
+          <div class="card mb-3 event2">
+            <img
+              class="card-img-top"
+              src="assets/images/background.jpg"
+              alt="Card image cap"
+              width="100"
+              height="100"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Event Name 1</h5>
+              <p class="card-text">Event Details</p>
+              <p class="card-text"><small class="text-muted">URL</small></p>
+            </div>
+          </div>
+          <div class="card mb-3 event2">
+            <img
+              class="card-img-top"
+              src="assets/images/background.jpg"
+              alt="Card image cap"
+              width="100"
+              height="100"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Event Name2</h5>
+              <p class="card-text">Event Details</p>
+              <p class="card-text"><small class="text-muted">URL</small></p>
+            </div>
+          </div>
+          <div class="card mb-3 event3">
+            <img
+              class="card-img-top"
+              src="assets/images/background.jpg"
+              alt="Card image cap"
+              width="100"
+              height="100"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Event Name3</h5>
+              <p class="card-text">Event Details</p>
+              <p class="card-text"><small class="text-muted">URL</small></p>
+            </div>
+            <!-- DELETE EVENTUALLY -->
+          </div>
+        </div>
+        <div class="card col-sm-5">
+          <div class="card">
+            <div class="card-header">Search</div>
+            <div class="card-body">
+              <div class="input-group mb-8">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default"
+                    >City</span
+                  >
+                </div>
+                <input
+                  type="text"
+                  class="form-control city-input"
+                  aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default"
+                />
+              </div>
+              <br />
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">Dates</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control beginDate-input"
+                  id="start"
+                />
+                <input
+                  type="text"
+                  class="form-control endDate-input"
+                  id="end"
+                />
+              </div>
+              <br />
+              <div class="input-group-append">
+                <button
+                  class="btn btn btn-dark searchButton"
+                  id="searchButton"
+                  type="button"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $("#start").datepicker({
+      onSelect: function(dateText, inst) {
+        $("#end").datepicker("option", "minDate", new Date(dateText));
+      }
+    });
+
+    $("#end").datepicker({
+      onSelect: function(dateText, inst) {
+        $("#start").datepicker("option", "maxDate", new Date(dateText));
+      }
+    });
+  </script>
+</html>
