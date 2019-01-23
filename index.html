@@ -29,6 +29,12 @@
       href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC:700|Bree+Serif|Concert+One|Major+Mono+Display"
       rel="stylesheet"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <title>Document</title>
   </head>
   <style>
@@ -53,9 +59,49 @@
       </div>
       <div class="row">
         <div class="card col-sm-7" style="width: 18rem;">
-          <div class="card">
-            <div class="card-header">Results</div>
-            <div class="card-body"></div>
+          <!-- DELETE EVENTUALLY -->
+          <div class="card mb-3 event2">
+            <img
+              class="card-img-top"
+              src="assets/images/background.jpg"
+              alt="Card image cap"
+              width="100"
+              height="100"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Event Name 1</h5>
+              <p class="card-text">Event Details</p>
+              <p class="card-text"><small class="text-muted">URL</small></p>
+            </div>
+          </div>
+          <div class="card mb-3 event2">
+            <img
+              class="card-img-top"
+              src="assets/images/background.jpg"
+              alt="Card image cap"
+              width="100"
+              height="100"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Event Name2</h5>
+              <p class="card-text">Event Details</p>
+              <p class="card-text"><small class="text-muted">URL</small></p>
+            </div>
+          </div>
+          <div class="card mb-3 event3">
+            <img
+              class="card-img-top"
+              src="assets/images/background.jpg"
+              alt="Card image cap"
+              width="100"
+              height="100"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Event Name3</h5>
+              <p class="card-text">Event Details</p>
+              <p class="card-text"><small class="text-muted">URL</small></p>
+            </div>
+            <!-- DELETE EVENTUALLY -->
           </div>
         </div>
         <div class="card col-sm-5">
@@ -81,14 +127,14 @@
                   <span class="input-group-text" id="">Dates</span>
                 </div>
                 <input
-                  type="date"
+                  type="text"
                   class="form-control beginDate-input"
-                  id="beginDate-input"
+                  id="start"
                 />
                 <input
-                  type="date"
+                  type="text"
                   class="form-control endDate-input"
-                  id="endDate-input"
+                  id="end"
                 />
               </div>
               <br />
@@ -108,6 +154,16 @@
     </div>
   </body>
   <script>
-    document.getElementById("beginDate-input").valueAsDate = new Date();
+    $("#start").datepicker({
+      onSelect: function(dateText, inst) {
+        $("#end").datepicker("option", "minDate", new Date(dateText));
+      }
+    });
+
+    $("#end").datepicker({
+      onSelect: function(dateText, inst) {
+        $("#start").datepicker("option", "maxDate", new Date(dateText));
+      }
+    });
   </script>
 </html>
