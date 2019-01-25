@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC:700|Bree+Serif|Concert+One|Major+Mono+Display"
+      rel="stylesheet"
+    />
+    <title>Eventify!</title>
+  </head>
+  <style>
+    body {
+      background-image: url("assets/images/background.jpg");
+      background-repeat: repeat-x;
+    }
+    .jumbotron {
+      font-family: "Major Mono Display", monospace;
+    }
+    .card {
+      font-family: "Concert One", cursive;
+    }
+  </style>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <div class="container">
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-6">Eventify</h1>
+          <p class="lead">Search for Events in Your Area!</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card col-sm-7" style="width: 18rem;">
+          <div class="card">
+            <div class="card-header"><i class="fas fa-table"></i> Results</div>
+            <div id="results" class="px-1"></div>
+          </div>
+        </div>
+        <div class="card col-sm-5">
+          <div class="row">
+            <div class="card">
+              <div class="card-header">Search</div>
+              <div class="card-body">
+                <div class="input-group mb-8">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">City</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    id="city-input"
+                  />
+                </div>
+                <br />
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="">Dates</span>
+                  </div>
+                  <input
+                    type="date"
+                    class="form-control beginDate-input"
+                    id="beginDate-input"
+                  />
+                  <input
+                    type="date"
+                    class="form-control endDate-input"
+                    id="endDate-input"
+                  />
+                </div>
+                <br />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn btn-dark searchButton"
+                    id="searchButton"
+                    type="button"
+                  >
+                    Search
+                  </button>
+                  <button
+                    class="btn btn btn-dark clearButton"
+                    id="clearButton"
+                    type="button"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <p></p>
+                <div class="row">
+                  <div class="card col-sm-12" style="width: 18rem;">
+                    <div class="card">
+                      <div class="card-header">Most Recent Views</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function() {
+      var searchCity = "";
+      var queryURL = "";
+      var beginInput = "";
+      var beginDate = "";
+      var endInput = "";
+      var endDate = "";
+      var city = "";
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; //January is 0!
+      var yyyy = today.getFullYear();
+      //Default the Date
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      beginDate = yyyy + "-" + mm + "-" + dd;
+      $("#beginDate-input").val(beginDate);
+
+      dd7 = dd + 7;
+      endDate = yyyy + "-" + mm + "-" + dd7;
+      $("#endDate-input").val(endDate);
+
+      $("#searchButton").on("click", function() {
+        renderEvents();
+      });
+
+      $("#clearButton").on("click", function() {
+        refresh();
+      });
+
+      // API to get user city location by computer IP Address
+      $.get("http://ipinfo.io/json", function(response) {
+        city = response.city;
+        $("#city-input").val(city);
+        renderEvents(city);
+      });
+
+      function refresh() {
+        $("#city-input").val("");
+        $("#beginDate-input").val("");
+        $("#endDate-input").val("");
+        $("#results").empty();
+      }
+
+      function renderEvents(city) {
+        queryURL =
+          "https://app.ticketmaster.com/discovery/v2/events.json?&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ";
+
+        if (city !== "") {
+          searchCity = city;
+        } else {
+          searchCity = $("#city-input")
+            .val()
+            .trim();
+        }
+
+        beginInput = $("#beginDate-input")
+          .val()
+          .trim();
+        beginDate = beginInput + "T00:00:01Z";
+
+        endInput = $("#endDate-input")
+          .val()
+          .trim();
+        endDate = endInput + "T23:59:59Z";
+
+        if (searchCity) {
+          queryURL += "&" + $.param({ city: searchCity });
+        }
+
+        if (beginDate) {
+          queryURL += "&" + $.param({ startDateTime: beginDate });
+        }
+
+        if (endDate) {
+          queryURL += "&" + $.param({ endDateTime: endDate });
+        }
+
+        $.ajax({
+          type: "GET",
+          url: queryURL,
+          async: true,
+          dataType: "json",
+          success: function(json) {
+            console.log(json);
+
+            for (i = 0; i < 10; i++) {
+              if (json._embedded.events) {
+                //Name
+                $("#results").append(
+                  $("<h3 class=card-title>").text(json._embedded.events[i].name)
+                );
+                //Status
+                $("#results").append(
+                  $("<span class='badge badge-success'>").text(
+                    json._embedded.events[i].dates.status.code
+                  )
+                );
+
+                //Image
+                $("#results").append(
+                  "<img src=" +
+                    json._embedded.events[i].images[0].url +
+                    " class=card-img-top width=350 height=250></img>"
+                );
+
+                //Local Date
+                $("#results").append(
+                  $("<h5 class=card-text>").text(
+                    "Date: " + json._embedded.events[i].dates.start.localDate
+                  )
+                );
+
+                //Local Time
+                $("#results").append(
+                  $("<h6 class=card-text>").text(
+                    "Time: " + json._embedded.events[i].dates.start.localTime
+                  )
+                );
+
+                //URL
+                $("#results").append(
+                  $("<a href=" + json._embedded.events[i].url + ">").text(
+                    "More Info"
+                  )
+                );
+
+                //Line
+                $("#results").append("<hr/>");
+              }
+            }
+          },
+          error: function(xhr, status, err) {}
+        });
+      }
+    });
+  </script>
+</html>
