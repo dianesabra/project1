@@ -29,13 +29,7 @@
       href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC:700|Bree+Serif|Concert+One|Major+Mono+Display"
       rel="stylesheet"
     />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <title>Document</title>
+    <title>Eventify!</title>
   </head>
   <style>
     body {
@@ -50,6 +44,7 @@
     }
   </style>
   <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <div class="container">
       <div class="jumbotron jumbotron-fluid">
         <div class="container">
@@ -59,93 +54,69 @@
       </div>
       <div class="row">
         <div class="card col-sm-7" style="width: 18rem;">
-          <!-- DELETE EVENTUALLY -->
-          <div class="card mb-3 event2">
-            <img
-              class="card-img-top"
-              src="assets/images/background.jpg"
-              alt="Card image cap"
-              width="100"
-              height="100"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Event Name 1</h5>
-              <p class="card-text">Event Details</p>
-              <p class="card-text"><small class="text-muted">URL</small></p>
-            </div>
-          </div>
-          <div class="card mb-3 event2">
-            <img
-              class="card-img-top"
-              src="assets/images/background.jpg"
-              alt="Card image cap"
-              width="100"
-              height="100"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Event Name2</h5>
-              <p class="card-text">Event Details</p>
-              <p class="card-text"><small class="text-muted">URL</small></p>
-            </div>
-          </div>
-          <div class="card mb-3 event3">
-            <img
-              class="card-img-top"
-              src="assets/images/background.jpg"
-              alt="Card image cap"
-              width="100"
-              height="100"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Event Name3</h5>
-              <p class="card-text">Event Details</p>
-              <p class="card-text"><small class="text-muted">URL</small></p>
-            </div>
-            <!-- DELETE EVENTUALLY -->
+          <div class="card">
+            <div class="card-header"><i class="fas fa-table"></i> Results</div>
+            <div id="results" class="px-1"></div>
           </div>
         </div>
         <div class="card col-sm-5">
-          <div class="card">
-            <div class="card-header">Search</div>
-            <div class="card-body">
-              <div class="input-group mb-8">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-default"
-                    >City</span
+          <div class="row">
+            <div class="card">
+              <div class="card-header">Search</div>
+              <div class="card-body">
+                <div class="input-group mb-8">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">City</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    id="city-input"
+                  />
+                </div>
+                <br />
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="">Dates</span>
+                  </div>
+                  <input
+                    type="date"
+                    class="form-control beginDate-input"
+                    id="beginDate-input"
+                  />
+                  <input
+                    type="date"
+                    class="form-control endDate-input"
+                    id="endDate-input"
+                  />
+                </div>
+                <br />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn btn-dark searchButton"
+                    id="searchButton"
+                    type="button"
                   >
+                    Search
+                  </button>
+                  <button
+                    class="btn btn btn-dark clearButton"
+                    id="clearButton"
+                    type="button"
+                  >
+                    Clear
+                  </button>
                 </div>
-                <input
-                  type="text"
-                  class="form-control city-input"
-                  aria-label="Default"
-                  aria-describedby="inputGroup-sizing-default"
-                />
-              </div>
-              <br />
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="">Dates</span>
+                <p></p>
+                <div class="row">
+                  <div class="card col-sm-12" style="width: 18rem;">
+                    <div class="card">
+                      <div class="card-header">Most Recent Views</div>
+                    </div>
+                  </div>
                 </div>
-                <input
-                  type="text"
-                  class="form-control beginDate-input"
-                  id="start"
-                />
-                <input
-                  type="text"
-                  class="form-control endDate-input"
-                  id="end"
-                />
-              </div>
-              <br />
-              <div class="input-group-append">
-                <button
-                  class="btn btn btn-dark searchButton"
-                  id="searchButton"
-                  type="button"
-                >
-                  Search
-                </button>
               </div>
             </div>
           </div>
@@ -154,15 +125,144 @@
     </div>
   </body>
   <script>
-    $("#start").datepicker({
-      onSelect: function(dateText, inst) {
-        $("#end").datepicker("option", "minDate", new Date(dateText));
+    $(document).ready(function() {
+      var searchCity = "";
+      var queryURL = "";
+      var beginInput = "";
+      var beginDate = "";
+      var endInput = "";
+      var endDate = "";
+      var city = "";
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; //January is 0!
+      var yyyy = today.getFullYear();
+      //Default the Date
+      if (dd < 10) {
+        dd = "0" + dd;
       }
-    });
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      beginDate = yyyy + "-" + mm + "-" + dd;
+      $("#beginDate-input").val(beginDate);
 
-    $("#end").datepicker({
-      onSelect: function(dateText, inst) {
-        $("#start").datepicker("option", "maxDate", new Date(dateText));
+      dd7 = dd + 7;
+      endDate = yyyy + "-" + mm + "-" + dd7;
+      $("#endDate-input").val(endDate);
+
+      $("#searchButton").on("click", function() {
+        renderEvents();
+      });
+
+      $("#clearButton").on("click", function() {
+        refresh();
+      });
+
+      // API to get user city location by computer IP Address
+      $.get("http://ipinfo.io/json", function(response) {
+        city = response.city;
+        $("#city-input").val(city);
+        renderEvents(city);
+      });
+
+      function refresh() {
+        $("#city-input").val("");
+        $("#beginDate-input").val("");
+        $("#endDate-input").val("");
+        $("#results").empty();
+      }
+
+      function renderEvents(city) {
+        queryURL =
+          "https://app.ticketmaster.com/discovery/v2/events.json?&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ";
+
+        if (city !== "") {
+          searchCity = city;
+        } else {
+          searchCity = $("#city-input")
+            .val()
+            .trim();
+        }
+
+        beginInput = $("#beginDate-input")
+          .val()
+          .trim();
+        beginDate = beginInput + "T00:00:01Z";
+
+        endInput = $("#endDate-input")
+          .val()
+          .trim();
+        endDate = endInput + "T23:59:59Z";
+
+        if (searchCity) {
+          queryURL += "&" + $.param({ city: searchCity });
+        }
+
+        if (beginDate) {
+          queryURL += "&" + $.param({ startDateTime: beginDate });
+        }
+
+        if (endDate) {
+          queryURL += "&" + $.param({ endDateTime: endDate });
+        }
+
+        $.ajax({
+          type: "GET",
+          url: queryURL,
+          async: true,
+          dataType: "json",
+          success: function(json) {
+            console.log(json);
+
+            for (i = 0; i < 10; i++) {
+              if (json._embedded.events) {
+                //Name
+                $("#results").append(
+                  $("<h3 class=card-title>").text(json._embedded.events[i].name)
+                );
+                //Status
+                $("#results").append(
+                  $("<span class='badge badge-success'>").text(
+                    json._embedded.events[i].dates.status.code
+                  )
+                );
+
+                //Image
+                $("#results").append(
+                  "<img src=" +
+                    json._embedded.events[i].images[0].url +
+                    " class=card-img-top width=350 height=250></img>"
+                );
+
+                //Local Date
+                $("#results").append(
+                  $("<h5 class=card-text>").text(
+                    "Date: " + json._embedded.events[i].dates.start.localDate
+                  )
+                );
+
+                //Local Time
+                $("#results").append(
+                  $("<h6 class=card-text>").text(
+                    "Time: " + json._embedded.events[i].dates.start.localTime
+                  )
+                );
+
+                //URL
+                $("#results").append(
+                  $("<a href=" + json._embedded.events[i].url + ">").text(
+                    "More Info"
+                  )
+                );
+
+                //Line
+                $("#results").append("<hr/>");
+              }
+            }
+          },
+          error: function(xhr, status, err) {}
+        });
       }
     });
   </script>
