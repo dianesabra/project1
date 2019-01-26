@@ -124,6 +124,7 @@
       </div>
     </div>
   </body>
+  <script src="logic.js"></script>
   <script>
     $(document).ready(function() {
       var searchCity = "";
@@ -152,7 +153,7 @@
       $("#endDate-input").val(endDate);
 
       $("#searchButton").on("click", function() {
-        renderEvents();
+        renderEvents($("#city-input").val(city));
       });
 
       $("#clearButton").on("click", function() {
@@ -160,7 +161,7 @@
       });
 
       // API to get user city location by computer IP Address
-      $.get("http://ipinfo.io/json", function(response) {
+      $.get("https://ipinfo.io/json", function(response) {
         city = response.city;
         $("#city-input").val(city);
         renderEvents(city);
