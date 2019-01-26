@@ -20,8 +20,8 @@ $(document).ready(function() {
     beginDate = yyyy + "-" + mm + "-" + dd;
     $("#beginDate-input").val(beginDate);
 
-    dd7 = dd + 7;
-    endDate = yyyy + "-" + mm + "-" + dd7;
+    dd1 = dd + 1;
+    endDate = yyyy + "-" + mm + "-" + dd1;
     $("#endDate-input").val(endDate);
 
     $("#searchButton").on("click", function() {
@@ -61,7 +61,7 @@ $(document).ready(function() {
       beginInput = $("#beginDate-input")
         .val()
         .trim();
-      beginDate = beginInput + "T00:00:01Z";
+      beginDate = beginInput + "T00:00:00Z";
 
       endInput = $("#endDate-input")
         .val()
