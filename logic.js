@@ -33,7 +33,7 @@ $(document).ready(function() {
     });
 
     // API to get user city location by computer IP Address
-    $.get("http://ipinfo.io/json", function(response) {
+    $.get("https://ipinfo.io/json", function(response) {
       city = response.city;
       $("#city-input").val(city);
       renderEvents(city);
