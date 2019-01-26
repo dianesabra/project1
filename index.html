@@ -29,18 +29,22 @@
       href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC:700|Bree+Serif|Concert+One|Major+Mono+Display"
       rel="stylesheet"
     />
+    <link rel="icon" href="assets/images/ticket_icon.png" type="image/x-icon" />
     <title>Eventify!</title>
   </head>
   <style>
     body {
-      background-image: url("assets/images/background.jpg");
-      background-repeat: repeat-x;
+      /* background-image: url("assets/images/background.jpg"); */
+      background-repeat: repeat;
     }
     .jumbotron {
       font-family: "Major Mono Display", monospace;
     }
     .card {
       font-family: "Concert One", cursive;
+    }
+    button {
+      margin: 10px;
     }
   </style>
   <body>
@@ -109,14 +113,8 @@
                     Clear
                   </button>
                 </div>
+                <div class="errorText"></div>
                 <p></p>
-                <div class="row">
-                  <div class="card col-sm-12" style="width: 18rem;">
-                    <div class="card">
-                      <div class="card-header">Most Recent Views</div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -124,9 +122,8 @@
       </div>
     </div>
   </body>
-  <script>
-    </script>
-    <!-- JavaScript -->
-  <script src="logic.js">
-  </script>
+
+  <!-- JavaScript -->
+  <script src="logic.js"></script>
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 </html>
