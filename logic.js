@@ -47,6 +47,7 @@ $(document).ready(function() {
     }
 
     function renderEvents(city) {
+        $("#results").empty();
       queryURL =
         "https://app.ticketmaster.com/discovery/v2/events.json?&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ";
 
