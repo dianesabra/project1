@@ -132,7 +132,7 @@ jQuery(function ()
     $("#results").empty();
     $(".errorText").empty();
     queryURL =
-      "https://app.ticketmaster.com/discovery/v2/events.json?&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ";
+      "https://app.ticketmaster.com/discovery/v2/events.json?&size=200&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ";
     if (lcity !== "") {
       searchCity = lcity;
     } else {
@@ -206,7 +206,7 @@ jQuery(function ()
       success: function(json) {
         console.log(json);
 
-        for (i = 0; i < 15; i++) {
+        for (i = 0; i < json.page.totalElements; i++) {
           if (json._embedded.events) {
             //Name
             $("#results").append(
