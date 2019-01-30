@@ -33,7 +33,7 @@ $(document).ready(function() {
     jQuery("#city-input").autocomplete({
       source: function(request, response) {
         jQuery.getJSON(
-          "http://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&template=<geobytes%20city>,%20<geobytes%20code>&q=" +
+          "https://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&template=<geobytes%20city>,%20<geobytes%20code>&q=" +
             request.term,
 
           function(data) {
