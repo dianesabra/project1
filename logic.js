@@ -8,7 +8,6 @@ $(document).ready(function() {
   var city = "";
   var autocity = "";
   var autostatecode = "";
-  
 
   //code to determine the default begin date (today's current date)
   var today = new Date();
@@ -34,7 +33,7 @@ $(document).ready(function() {
     jQuery("#city-input").autocomplete({
       source: function(request, response) {
         jQuery.getJSON(
-          "https://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&template=<geobytes%20city>,%20<geobytes%20code>&q=" +
+          "http://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&template=<geobytes%20city>,%20<geobytes%20code>&q=" +
             request.term,
 
           function(data) {
