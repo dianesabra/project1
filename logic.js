@@ -208,10 +208,20 @@ jQuery(function ()
 
         for (i = 0; i < json.page.totalElements; i++) {
           if (json._embedded.events) {
+ 	    var newRow = $("<div>");
+            newRow.addClass("row");
+            var newDiv = $("<div>");
+            newDiv.addClass("col-sm-7");
+            var newContainer = $("<div>");
+            newContainer.addClass("container");
+
+            var divImg = $("<div>");
+            divImg.addClass("col-sm-3");
             //Name
-            $("#results").append(
-              $("<h3 class=card-title>").text(json._embedded.events[i].name)
+            newContainer.append(
+              $("<h3 card-text>").text(json._embedded.events[i].name)
             );
+		  
           //Status
           if(json._embedded.events[i].dates.status.code == "onsale") {
             $("#results").append(
@@ -233,10 +243,10 @@ jQuery(function ()
             );
           } 
             //Image
-            $("#results").append(
+            divImg.append(
               "<img src=" +
                 json._embedded.events[i].images[0].url +
-                " class=card-img-top width=350 height=250></img>"
+                " width=150 height=150 />"
             );
             //Local Date
             $("#results").append(
@@ -248,8 +258,8 @@ jQuery(function ()
               )
             );
             //Local Time
-            $("#results").append(
-              $("<h6 class=card-text>").text(
+            newDiv.append(
+              $("<h6>").text(
                 "Time: " +
                   moment(
                     json._embedded.events[i].dates.start.localTime,
@@ -259,25 +269,27 @@ jQuery(function ()
             );
   
              //Venue 
-            $("#results").append(
+            newDiv..append(
               $("<p class=card-text>").text(
                 json._embedded.events[i]._embedded.venues[0].name
               )
             );
             //Address
-            $("#results").append(
+            newDiv..append(
               $("<p class=card-text>").text(
                 json._embedded.events[i]._embedded.venues[0].address.line1
               )
             );
-            //URL
-            $("#results").append(
+           //URL
+            newDiv.append(
               $("<a href=" + json._embedded.events[i].url + ">").text(
                 "More Info"
               )
             );
             //Line
-            $("#results").append("<hr/>");
+            newRow.append(divImg).append(newDiv);
+            newContainer.append(newRow);
+            $("#results").append(newContainer);
           }
         }
       },
