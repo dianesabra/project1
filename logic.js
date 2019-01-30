@@ -67,7 +67,7 @@ $(document).ready(function() {
     cityfqcn = fqcn;
     if (cityfqcn) {
       jQuery.getJSON(
-        "http://gd.geobytes.com/GetCityDetails?callback=?&fqcn=" + cityfqcn,
+        "https://gd.geobytes.com/GetCityDetails?callback=?&fqcn=" + cityfqcn,
         function(data) {
           jQuery("#geobytescode").val(data.geobytescode);
 
