@@ -31,8 +31,6 @@ $(document).ready(function() {
       }
     dd = dd - 30;
     dd1 = "0" + dd;
-    console.log("begin day " + dd1);
-    console.log("begin month " + mm1);
   } else 
   if (dd == 30 && mm == 04 || mm == 06 || mm == 09 || mm == 11) {
     mm1 = today.getMonth() + 2;
@@ -126,7 +124,9 @@ $(document).ready(function() {
     if (lcity !== "") {
       searchCity = lcity;
     } else {
-      searchCity = autocity;
+      searchCity = $("#city-input")
+        .val()
+        .trim();
       city2 = $("#city-input")
         .val()
         .trim();
