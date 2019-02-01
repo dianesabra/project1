@@ -161,7 +161,7 @@ $(document).ready(function() {
       queryURL += "&" + $.param({ endDateTime: endDate });
       endDate = "";
     }
-    console.log(queryURL);
+
     $.ajax({
       type: "GET",
       url: queryURL,
