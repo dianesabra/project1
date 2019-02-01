@@ -6,8 +6,6 @@ $(document).ready(function() {
   var endInput = "";
   var endDate = "";
   var city = "";
-  var autocity = "";
-  var autostatecode = "";
 
   //code to determine the default begin date (today's current date)
   var today = new Date();
@@ -22,96 +20,40 @@ $(document).ready(function() {
     mm = "0" + mm;
   }
   beginDate = yyyy + "-" + mm + "-" + dd;
+  todayDate = yyyy + "-" + mm + "-" + dd;
   $("#beginDate-input").val(beginDate);
-  //code to determine the default end date (1 day from today's date)
-  dd1 = dd + 1;
-  endDate = yyyy + "-" + mm + "-" + dd1;
-  $("#endDate-input").val(endDate);
 
-  // code to autocomplete list of cities
-  jQuery(function() {
-    jQuery("#city-input").autocomplete({
-      source: function(request, response) {
-        jQuery.getJSON(
-          "http://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&template=<geobytes%20city>,%20<geobytes%20code>&q=" +
-            request.term,
-
-          function(data) {
-            response(data);
-          }
-        );
-      },
-      minLength: 3,
-      select: function(event, ui) {
-        var selectedObj = ui.item;
-        jQuery("#city-input").val(selectedObj.value);
-        getcitydetails(selectedObj.value);
-        return false;
-      },
-      open: function() {
-        jQuery(this)
-          .removeClass("ui-corner-all")
-          .addClass("ui-corner-top");
-      },
-      close: function() {
-        jQuery(this)
-          .removeClass("ui-corner-top")
-          .addClass("ui-corner-all");
-      }
-    });
-    jQuery("#city-input").autocomplete("option", "delay", 100);
-  });
-  //code to extract city inputs details
-  function getcitydetails(fqcn) {
-    if (typeof fqcn == "undefined") fqcn = jQuery("#city-input").val();
-    cityfqcn = fqcn;
-    if (cityfqcn) {
-      jQuery.getJSON(
-        "https://gd.geobytes.com/GetCityDetails?callback=?&fqcn=" + cityfqcn,
-        function(data) {
-          jQuery("#geobytescode").val(data.geobytescode);
-
-          jQuery("#geobytesinternet").val(data.geobytesinternet);
-          jQuery("#geobytescountry").val(data.geobytescountry);
-          jQuery("#geobytesregionlocationcode").val(
-            data.geobytesregionlocationcode
-          );
-          jQuery("#geobytesregion").val(data.geobytesregion);
-          jQuery("#geobyteslocationcode").val(data.geobyteslocationcode);
-          jQuery("#geobytescity").val(data.geobytescity);
-          jQuery("#geobytescityid").val(data.geobytescityid);
-          jQuery("#geobytesfqcn").val(data.geobytesfqcn);
-          jQuery("#geobyteslatitude").val(data.geobyteslatitude);
-          jQuery("#geobyteslongitude").val(data.geobyteslongitude);
-          jQuery("#geobytescapital").val(data.geobytescapital);
-          jQuery("#geobytestimezone").val(data.geobytestimezone);
-          jQuery("#geobytesnationalitysingular").val(
-            data.geobytesnationalitysingular
-          );
-          jQuery("#geobytespopulation").val(data.geobytespopulation);
-          jQuery("#geobytesnationalityplural").val(
-            data.geobytesnationalityplural
-          );
-          jQuery("#geobytesmapreference").val(data.geobytesmapreference);
-          jQuery("#geobytescurrency").val(data.geobytescurrency);
-          jQuery("#geobytescurrencycode").val(data.geobytescurrencycode);
-
-          autocity = data.geobytescity;
-          autostatecode = data.geobytescode;
-
-          console.log(autocity);
-          console.log(autostatecode);
-        }
+  function sendEmail(subject, body) {
+    console.log("subject: " + subject + " body: " + body);
+    Email.send({
+      Host: "smtp.elasticemail.com",
+      Username: "dwsabra@gmail.com",
+      Password: "e697d0d0-f66f-474a-93e5-8ac035b1305a",
+      To: "dwsabra@gmail.com",
+      From: "dsabra@wiseit.com",
+      Subject: subject,
+      Body: body
+    }).then(message => {
+      return $(".errorText").append(
+        "<div class='alert alert-danger' role='alert'>Email Sent</div>"
       );
-    }
+    });
   }
+
+  $(document).on("click", ".buttonMe", function() {
+    var subject = $(this).attr("data-name");
+    var body = $(this).attr("data-url");
+    console.log(this);
+    console.log("subject: " + subject + " body: " + body);
+    sendEmail(subject, body);
+  });
 
   //on click event for search button
   $("#searchButton").on("click", function() {
-    var cityInput = autocity;
+    var cityInput = $("#city-input")
+      .val()
+      .trim();
     renderEvents(cityInput);
-    autocity = "";
-    autostatecode = "";
   });
 
   //on click event for clear button
@@ -189,14 +131,15 @@ $(document).ready(function() {
       );
     }
 
+    if (beginInput < todayDate) {
+      return $(".errorText").append(
+        "<div class='alert alert-danger' role='alert'>The begin date cannot be before today.</div>"
+      );
+    }
+
     if (searchCity) {
       queryURL += "&" + $.param({ city: searchCity });
       searchCity = "";
-    }
-
-    if (autostatecode) {
-      queryURL += "&" + $.param({ stateCode: autostatecode });
-      autostatecode = "";
     }
 
     if (beginDate) {
@@ -204,10 +147,10 @@ $(document).ready(function() {
       beginDate = "";
     }
 
-    // if (endDate) {
-    //   queryURL += "&" + $.param({ endDateTime: endDate });
-    //   endDate = "";
-    // }
+    if (endDate) {
+      queryURL += "&" + $.param({ endDateTime: endDate });
+      endDate = "";
+    }
 
     console.log(queryURL);
     $.ajax({
@@ -216,23 +159,27 @@ $(document).ready(function() {
       async: true,
       dataType: "json",
       success: function(json) {
-        console.log(json);
-
-        for (i = 0; i < json.page.totalElements; i++) {
+        for (i = 0; i < 20; i++) {
           if (json._embedded.events) {
             var newRow = $("<div>");
             newRow.addClass("row");
             var newDiv = $("<div>");
             newDiv.addClass("col-sm-7");
             var newContainer = $("<div>");
-            newContainer.addClass("container");
+            newContainer.addClass("container cardbox");
             var newHdr = $("<h3>");
             newHdr.addClass("card-text");
 
             var divImg = $("<div>");
             divImg.addClass("col-sm-3");
+
             //Name
-            newHdr.append(json._embedded.events[i].name);
+
+            if (typeof json._embedded.events[i].name == "string") {
+              newHdr.append(json._embedded.events[i].name);
+            } else {
+              continue;
+            }
 
             //Status
             if (json._embedded.events[i].dates.status.code == "onsale") {
@@ -262,6 +209,12 @@ $(document).ready(function() {
                 json._embedded.events[i].images[0].url +
                 " width=150 height=150 />"
             );
+
+            //Button
+            newDiv.append("<button class='buttonMe'> Email Me </button>");
+            $(".buttonMe").attr("data-name", json._embedded.events[i].name);
+            $(".buttonMe").attr("data-url", json._embedded.events[i].url);
+
             //Local Date
             newDiv.append(
               $("<h5>").text(
@@ -300,6 +253,7 @@ $(document).ready(function() {
                 "More Info"
               )
             );
+
             //Line
             newRow.append(divImg).append(newDiv);
             newContainer.append(newHdr).append(newRow);
