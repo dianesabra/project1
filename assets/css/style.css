@@ -1,0 +1,16 @@
+body {
+  background-image: url("../images/background.jpg");
+  background-repeat: repeat;
+}
+.jumbotron {
+  font-family: "Major Mono Display", monospace;
+}
+.card {
+  font-family: "Concert One", cursive;
+}
+button {
+  margin: 10px;
+}
+.cardbox {
+  margin-bottom: 50px;
+}
