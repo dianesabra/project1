@@ -147,8 +147,6 @@ $(document).ready(function() {
       );
     } else {
       beginDate = beginInput + "T12:00:00Z";
-      console.log("begin date time " + beginDate);
-
     }
 
     endInput = $("#endDate-input")
