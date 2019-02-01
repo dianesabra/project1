@@ -22,93 +22,18 @@ $(document).ready(function() {
     mm = "0" + mm;
   }
   beginDate = yyyy + "-" + mm + "-" + dd;
+  todayDate = yyyy + "-" + mm + "-" + dd;
   $("#beginDate-input").val(beginDate);
   //code to determine the default end date (1 day from today's date)
   dd1 = dd + 1;
   endDate = yyyy + "-" + mm + "-" + dd1;
   $("#endDate-input").val(endDate);
 
-  // code to autocomplete list of cities
-  jQuery(function() {
-    jQuery("#city-input").autocomplete({
-      source: function(request, response) {
-        jQuery.getJSON(
-          "http://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&template=<geobytes%20city>,%20<geobytes%20code>&q=" +
-            request.term,
-
-          function(data) {
-            response(data);
-          }
-        );
-      },
-      minLength: 3,
-      select: function(event, ui) {
-        var selectedObj = ui.item;
-        jQuery("#city-input").val(selectedObj.value);
-        getcitydetails(selectedObj.value);
-        return false;
-      },
-      open: function() {
-        jQuery(this)
-          .removeClass("ui-corner-all")
-          .addClass("ui-corner-top");
-      },
-      close: function() {
-        jQuery(this)
-          .removeClass("ui-corner-top")
-          .addClass("ui-corner-all");
-      }
-    });
-    jQuery("#city-input").autocomplete("option", "delay", 100);
-  });
-  //code to extract city inputs details
-  function getcitydetails(fqcn) {
-    if (typeof fqcn == "undefined") fqcn = jQuery("#city-input").val();
-    cityfqcn = fqcn;
-    if (cityfqcn) {
-      jQuery.getJSON(
-        "https://gd.geobytes.com/GetCityDetails?callback=?&fqcn=" + cityfqcn,
-        function(data) {
-          jQuery("#geobytescode").val(data.geobytescode);
-
-          jQuery("#geobytesinternet").val(data.geobytesinternet);
-          jQuery("#geobytescountry").val(data.geobytescountry);
-          jQuery("#geobytesregionlocationcode").val(
-            data.geobytesregionlocationcode
-          );
-          jQuery("#geobytesregion").val(data.geobytesregion);
-          jQuery("#geobyteslocationcode").val(data.geobyteslocationcode);
-          jQuery("#geobytescity").val(data.geobytescity);
-          jQuery("#geobytescityid").val(data.geobytescityid);
-          jQuery("#geobytesfqcn").val(data.geobytesfqcn);
-          jQuery("#geobyteslatitude").val(data.geobyteslatitude);
-          jQuery("#geobyteslongitude").val(data.geobyteslongitude);
-          jQuery("#geobytescapital").val(data.geobytescapital);
-          jQuery("#geobytestimezone").val(data.geobytestimezone);
-          jQuery("#geobytesnationalitysingular").val(
-            data.geobytesnationalitysingular
-          );
-          jQuery("#geobytespopulation").val(data.geobytespopulation);
-          jQuery("#geobytesnationalityplural").val(
-            data.geobytesnationalityplural
-          );
-          jQuery("#geobytesmapreference").val(data.geobytesmapreference);
-          jQuery("#geobytescurrency").val(data.geobytescurrency);
-          jQuery("#geobytescurrencycode").val(data.geobytescurrencycode);
-
-          autocity = data.geobytescity;
-          autostatecode = data.geobytescode;
-
-          console.log(autocity);
-          console.log(autostatecode);
-        }
-      );
-    }
-  }
-
   //on click event for search button
   $("#searchButton").on("click", function() {
-    var cityInput = autocity;
+    var cityInput = $("#city-input")
+      .val()
+      .trim();
     renderEvents(cityInput);
     autocity = "";
     autostatecode = "";
@@ -204,10 +129,10 @@ $(document).ready(function() {
       beginDate = "";
     }
 
-    // if (endDate) {
-    //   queryURL += "&" + $.param({ endDateTime: endDate });
-    //   endDate = "";
-    // }
+    if (endDate) {
+      queryURL += "&" + $.param({ endDateTime: endDate });
+      endDate = "";
+    }
 
     console.log(queryURL);
     $.ajax({
