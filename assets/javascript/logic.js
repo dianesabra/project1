@@ -24,41 +24,39 @@ $(document).ready(function() {
   $("#beginDate-input").val(beginDate);
   // code to determine the default end date (1 day from today's date)
   var userInputEndDate = $("#endDate-input").val(); //SAM
-  if (
-    (dd == 31 && mm == 03) ||
-    mm == 01 ||
-    mm == 05 ||
-    mm == 07 ||
-    mm == 08 ||
-    mm == 10 ||
-    mm == 12
-  ) {
+  if (dd == 31 && mm == 03||mm == 01 || mm == 05 ||mm == 07 ||mm == 08 ||mm == 10 ||mm == 12) {
     mm1 = today.getMonth() + 2;
-    if (mm1 < 10) {
+      if (mm1 < 10) {
       mm1 = "0" + mm1;
-    }
+      }
     dd = dd - 30;
     dd1 = "0" + dd;
-    console.log("begin day " + dd);
-    console.log("begin month " + mm);
-  } else if ((dd == 30 && mm == 04) || mm == 06 || mm == 09 || mm == 11) {
+    console.log("begin day " + dd1);
+    console.log("begin month " + mm1);
+  } else 
+  if (dd == 30 && mm == 04 || mm == 06 || mm == 09 || mm == 11) {
     mm1 = today.getMonth() + 2;
     if (mm1 < 10) {
-      mm1 = "0" + mm1;
+    mm1 = "0" + mm1;
     }
     dd = dd - 29;
     dd1 = "0" + dd;
-  } else if (dd == 28 && mm == 02) {
+  } else 
+  if (dd == 28 && mm == 02) {
     mm1 = today.getMonth() + 2;
     if (mm1 < 10) {
-      mm1 = "0" + mm1;
+    mm1 = "0" + mm1;
     }
     dd = dd - 27;
     dd1 = "0" + dd;
   } else {
-    dd1 = dd + 1;
+    dd1 = today.getDate() +1; 
+    if (dd1 < 10) {
+      dd1 = "0"+ dd1; 
+    }
     mm1 = mm;
-  }
+  }; 
+    
   endDate = yyyy + "-" + mm1 + "-" + dd1;
   $("#endDate-input").val(endDate); //userInputEndDate); ///SAM
 
@@ -149,6 +147,8 @@ $(document).ready(function() {
       );
     } else {
       beginDate = beginInput + "T12:00:00Z";
+      console.log("begin date time " + beginDate);
+
     }
 
     endInput = $("#endDate-input")
@@ -156,6 +156,8 @@ $(document).ready(function() {
       .trim();
     if (endInput !== "") {
       endDate = endInput + "T23:59:59Z";
+      console.log("end input " + endInput);
+      console.log("end date time " + endDate);
     }
 
     function calcDaysBetween(date1, date2) {
