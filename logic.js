@@ -22,14 +22,18 @@ $(document).ready(function() {
   beginDate = yyyy + "-" + mm + "-" + dd;
   todayDate = yyyy + "-" + mm + "-" + dd;
   $("#beginDate-input").val(beginDate);
+  //code to determine the default end date (1 day from today's date)
 
-  function sendEmail(subject, body) {
-    console.log("subject: " + subject + " body: " + body);
+  dd1 = dd + 1;
+  endDate = yyyy + "-" + mm + "-" + dd1;
+  $("#endDate-input").val(endDate);
+
+  function sendEmail(subject, body, email) {
     Email.send({
       Host: "smtp.elasticemail.com",
       Username: "dwsabra@gmail.com",
       Password: "e697d0d0-f66f-474a-93e5-8ac035b1305a",
-      To: "dwsabra@gmail.com",
+      To: email,
       From: "dsabra@wiseit.com",
       Subject: subject,
       Body: body
@@ -41,11 +45,19 @@ $(document).ready(function() {
   }
 
   $(document).on("click", ".buttonMe", function() {
+    $(".errorText").empty();
     var subject = $(this).attr("data-name");
     var body = $(this).attr("data-url");
-    console.log(this);
-    console.log("subject: " + subject + " body: " + body);
-    sendEmail(subject, body);
+    var email = $(".email-input")
+      .val()
+      .trim();
+
+    if (email === "") {
+      return $(".errorText").append(
+        "<div class='alert alert-danger' role='alert'>The email must be populated.</div>"
+      );
+    }
+    sendEmail(subject, body, email);
   });
 
   //on click event for search button
@@ -69,9 +81,7 @@ $(document).ready(function() {
   });
 
   function refresh() {
-    $("#city-input").val("");
-    $("#beginDate-input").val("");
-    $("#endDate-input").val("");
+    $(".form-control").val("");
     $("#results").empty();
     $(".errorText").empty();
   }
@@ -80,7 +90,7 @@ $(document).ready(function() {
     $("#results").empty();
     $(".errorText").empty();
     queryURL =
-      "https://app.ticketmaster.com/discovery/v2/events.json?&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ";
+      "https://app.ticketmaster.com/discovery/v2/events.json?&sort=date,asc&apikey=pczsxb2VNGTaABdwFJ0vza3eRe29BFWQ&size=100";
     if (lcity !== "") {
       searchCity = lcity;
     } else {
@@ -104,7 +114,7 @@ $(document).ready(function() {
         "<div class='alert alert-danger' role='alert'>The begin date must be populated.</div>"
       );
     } else {
-      beginDate = beginInput + "T00:00:00Z";
+      beginDate = beginInput + "T12:00:00Z";
     }
 
     endInput = $("#endDate-input")
@@ -151,7 +161,6 @@ $(document).ready(function() {
       queryURL += "&" + $.param({ endDateTime: endDate });
       endDate = "";
     }
-
     console.log(queryURL);
     $.ajax({
       type: "GET",
@@ -159,7 +168,18 @@ $(document).ready(function() {
       async: true,
       dataType: "json",
       success: function(json) {
-        for (i = 0; i < 20; i++) {
+        if (json.page.totalElements === 0) {
+          return $(".errorText").append(
+            "<div class='alert alert-danger' role='alert'>There are no search results within these filters.</div>"
+          );
+        }
+        if (json.page.totalElements > 200) {
+          counter = 200;
+        } else {
+          counter = json.page.totalElements;
+        }
+
+        for (i = 0; i < counter; i++) {
           if (json._embedded.events) {
             var newRow = $("<div>");
             newRow.addClass("row");
@@ -211,9 +231,20 @@ $(document).ready(function() {
             );
 
             //Button
-            newDiv.append("<button class='buttonMe'> Email Me </button>");
+            newDiv.append(
+              "<button class='buttonMe btn btn-info'> Email </button>"
+            );
             $(".buttonMe").attr("data-name", json._embedded.events[i].name);
             $(".buttonMe").attr("data-url", json._embedded.events[i].url);
+
+            //URL
+            newDiv.append(
+              $(
+                "<a href=" +
+                  json._embedded.events[i].url +
+                  " target='_blank' class='btn btn-outline-success active' role='button' aria-pressed='true'>"
+              ).text("More Info")
+            );
 
             //Local Date
             newDiv.append(
@@ -237,20 +268,10 @@ $(document).ready(function() {
 
             //Venue
             newDiv.append(
-              $("<p class=card-text>").text(
-                json._embedded.events[i]._embedded.venues[0].name
-              )
-            );
-            //Address
-            newDiv.append(
-              $("<p class=card-text>").text(
-                json._embedded.events[i]._embedded.venues[0].address.line1
-              )
-            );
-            //URL
-            newDiv.append(
-              $("<a href=" + json._embedded.events[i].url + ">").text(
-                "More Info"
+              $("<p>").text(
+                json._embedded.events[i]._embedded.venues[0].name +
+                  ", " +
+                  json._embedded.events[i]._embedded.venues[0].address.line1
               )
             );
 
