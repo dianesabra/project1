@@ -22,10 +22,45 @@ $(document).ready(function() {
   beginDate = yyyy + "-" + mm + "-" + dd;
   todayDate = yyyy + "-" + mm + "-" + dd;
   $("#beginDate-input").val(beginDate);
-  //code to determine the default end date (1 day from today's date)
+  // code to determine the default end date (1 day from today's date)
 
-  dd1 = dd + 1;
-  endDate = yyyy + "-" + mm + "-" + dd1;
+  if (
+    (dd == 31 && mm == 03) ||
+    mm == 01 ||
+    mm == 05 ||
+    mm == 07 ||
+    mm == 08 ||
+    mm == 10 ||
+    mm == 12
+  ) {
+    mm1 = today.getMonth() + 2;
+    if (mm1 < 10) {
+      mm1 = "0" + mm1;
+    }
+    dd = dd - 30;
+    dd1 = "0" + dd;
+    console.log("begin day " + dd);
+    console.log("begin month " + mm);
+  } else if ((dd == 30 && mm == 04) || mm == 06 || mm == 09 || mm == 11) {
+    mm1 = today.getMonth() + 2;
+    if (mm1 < 10) {
+      mm1 = "0" + mm1;
+    }
+    dd = dd - 29;
+    dd1 = "0" + dd;
+  } else if (dd == 28 && mm == 02) {
+    mm1 = today.getMonth() + 2;
+    if (mm1 < 10) {
+      mm1 = "0" + mm1;
+    }
+    dd = dd - 27;
+    dd1 = "0" + dd;
+  } else {
+    dd1 = dd + 1;
+    mm1 = mm;
+  }
+
+  endDate = yyyy + "-" + mm1 + "-" + dd1;
   $("#endDate-input").val(endDate);
 
   function sendEmail(subject, body, email) {
