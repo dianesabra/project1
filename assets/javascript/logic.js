@@ -156,8 +156,6 @@ $(document).ready(function() {
       .trim();
     if (endInput !== "") {
       endDate = endInput + "T23:59:59Z";
-      console.log("end input " + endInput);
-      console.log("end date time " + endDate);
     }
 
     function calcDaysBetween(date1, date2) {
