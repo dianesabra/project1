@@ -23,7 +23,7 @@ $(document).ready(function() {
   todayDate = yyyy + "-" + mm + "-" + dd;
   $("#beginDate-input").val(beginDate);
   // code to determine the default end date (1 day from today's date)
-
+  var userInputEndDate = $("#endDate-input").val(); //SAM
   if (
     (dd == 31 && mm == 03) ||
     mm == 01 ||
@@ -59,9 +59,8 @@ $(document).ready(function() {
     dd1 = dd + 1;
     mm1 = mm;
   }
-
   endDate = yyyy + "-" + mm1 + "-" + dd1;
-  $("#endDate-input").val(endDate);
+  $("#endDate-input").val(endDate); //userInputEndDate); ///SAM
 
   function sendEmail(subject, body, email) {
     Email.send({
@@ -74,7 +73,7 @@ $(document).ready(function() {
       Body: body
     }).then(message => {
       return $(".errorText").append(
-        "<div class='alert alert-danger' role='alert'>Email Sent</div>"
+        "<div class='alert alert-success' role='alert'>Email Sent</div>"
       );
     });
   }
